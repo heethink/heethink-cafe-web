@@ -1,0 +1,14 @@
+{
+  "name": "kma-weather-web",
+  "version": "1.0.0",
+  "description": "기상청 API 연동 실시간 날씨 웹 애플리케이션",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2"
+  }
+}

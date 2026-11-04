@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>기상청 실시간 날씨 알리미</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- 헤더 -->
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-icon">🌤️</span>
+        <h1>기상청 실시간 날씨</h1>
+      </div>
+      <div class="header-actions">
+        <button id="btn-api-key" class="btn btn-secondary">
+          <span class="icon">🔑</span> API 키 설정
+        </button>
+      </div>
+    </header>
+
+    <!-- API 키 알림 배너 (기본 데모 모드일 때 표시) -->
+    <div id="demo-banner" class="demo-banner">
+      <div class="banner-content">
+        <span class="banner-badge">데모 모드</span>
+        <span>공공데이터포털 API 키를 등록하면 실제 기상청 실시간 데이터를 조회할 수 있습니다.</span>
+      </div>
+      <button id="banner-btn-key" class="banner-action-btn">API 키 등록하기</button>
+    </div>
+
+    <!-- 지역 선택 및 현재 위치 바 -->
+    <div class="selector-card">
+      <div class="selector-group">
+        <div class="select-wrapper">
+          <label for="select-sido">시·도</label>
+          <select id="select-sido"></select>
+        </div>
+        <div class="select-wrapper">
+          <label for="select-district">시·군·구</label>
+          <select id="select-district"></select>
+        </div>
+        <button id="btn-search" class="btn btn-primary">
+          <span class="icon">🔍</span> 날씨 조회
+        </button>
+      </div>
+      <button id="btn-my-location" class="btn btn-outline">
+        <span class="icon">📍</span> 내 현재 위치
+      </button>
+    </div>
+
+    <!-- 로딩 스피너 -->
+    <div id="loading" class="loading-container hidden">
+      <div class="spinner"></div>
+      <p>기상청 예보 데이터를 불러오는 중...</p>
+    </div>
+
+    <!-- 날씨 표시 메인 컨테이너 -->
+    <main id="weather-content" class="weather-content">
+      <!-- 현재 날씨 카드 -->
+      <section class="card current-weather-card">
+        <div class="card-header">
+          <div>
+            <h2 id="location-name">서울특별시 중구</h2>
+            <p id="base-time-info" class="sub-text">2026.11.04 19:00 발표 기준</p>
+          </div>
+          <span id="coord-info" class="badge">nx: 60, ny: 127</span>
+        </div>
+
+        <div class="current-main">
+          <div class="weather-visual">
+            <span id="weather-icon" class="weather-large-icon">☀️</span>
+            <div class="weather-text-wrap">
+              <span id="weather-status-text" class="weather-desc">맑음</span>
+              <span id="rain-type-text" class="sub-desc">강수 없음</span>
+            </div>
+          </div>
+          <div class="temp-display">
+            <span id="current-temp" class="temp-number">18</span>
+            <span class="temp-unit">°C</span>
+          </div>
+        </div>
+
+        <!-- 상세 기상 요소 그리드 -->
+        <div class="weather-details-grid">
+          <div class="detail-item">
+            <span class="detail-icon">💧</span>
+            <div class="detail-info">
+              <span class="detail-label">습도</span>
+              <span id="detail-humidity" class="detail-value">55%</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <span class="detail-icon">🌧️</span>
+            <div class="detail-info">
+              <span class="detail-label">1시간 강수량</span>
+              <span id="detail-rain" class="detail-value">0 mm</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <span class="detail-icon">💨</span>
+            <div class="detail-info">
+              <span class="detail-label">풍속</span>
+              <span id="detail-wind-speed" class="detail-value">2.1 m/s</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <span class="detail-icon">🧭</span>
+            <div class="detail-info">
+              <span class="detail-label">풍향</span>
+              <span id="detail-wind-dir" class="detail-value">남서풍</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 시간별 초단기 예보 -->
+      <section class="card forecast-section">
+        <h3 class="section-title">⏱️ 시간별 예보 (초단기예보)</h3>
+        <div id="forecast-list" class="forecast-list">
+          <!-- 동적으로 시간별 카드 추가 -->
+        </div>
+      </section>
+    </main>
+
+    <!-- API 키 설정 모달 -->
+    <div id="modal-api-key" class="modal hidden">
+      <div class="modal-backdrop"></div>
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>기상청 API 키 설정</h3>
+          <button id="btn-close-modal" class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-desc">
+            <strong>공공데이터포털(data.go.kr)</strong>의 
+            <em>기상청_단기예보 ((구) 동네예보) 조회서비스</em> 
+            발급키(일반 인증키 - Decoding 권장)를 입력하세요.
+          </p>
+          <div class="input-group">
+            <label for="input-api-key">인증키 (Service Key)</label>
+            <input type="text" id="input-api-key" placeholder="발급받은 인증키를 붙여넣으세요">
+          </div>
+          <div class="guide-box">
+            <h4>💡 발급 방법</h4>
+            <ol>
+              <li><a href="https://www.data.go.kr" target="_blank" rel="noopener">공공데이터포털(data.go.kr)</a> 회원가입 및 로그인</li>
+              <li><strong>"기상청_단기예보 ((구) 동네예보) 조회서비스"</strong> 검색 후 [활용신청]</li>
+              <li>승인 즉시 발급되는 <strong>일반 인증키(Decoding 또는 Encoding)</strong> 복사</li>
+              <li>키를 비워두시면 모의(데모) 데이터로 계속 확인하실 수 있습니다.</li>
+            </ol>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="btn-demo-mode" class="btn btn-outline">데모 모드로 보기</button>
+          <button id="btn-save-key" class="btn btn-primary">저장 및 적용</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="regions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

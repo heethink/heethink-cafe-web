@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>heethink cafe — 생각이 머무는 곳, 희띵크 카페</title>
+  
+  <!-- Fonts: Pretendard for SEED Design System -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  
+  <!-- SEED Style -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- 1. SEED Top Navigation App Bar -->
+  <header class="seed-appbar">
+    <div class="container seed-appbar-inner">
+      <a href="#" class="seed-brand">
+        <div class="seed-brand-icon">H</div>
+        <div class="seed-brand-title">
+          <span class="brand-name">heethink cafe</span>
+          <span class="brand-location">📍 성수동 2가 ∙ 영업중</span>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="seed-nav-links">
+          <li><a href="#menu" class="seed-nav-link active">메뉴 둘러보기</a></li>
+          <li><a href="#finder" class="seed-nav-link">취향 찾기</a></li>
+          <li><a href="#reviews" class="seed-nav-link">동네 단골후기</a></li>
+          <li><a href="#reservation" class="seed-nav-link">테이블 예약</a></li>
+        </ul>
+      </nav>
+
+      <div class="seed-appbar-actions">
+        <!-- Cafe Sound Player -->
+        <button id="soundToggleBtn" class="seed-btn seed-btn-sm seed-btn-neutral-weak" title="카페 앰비언스 사운드">
+          <div id="soundWave" class="sound-wave-icon" style="display:inline-flex; gap:2px; height:12px; margin-right:4px;">
+            <span style="width:2px; background:var(--seed-color-fg-brand); border-radius:1px; height:6px;"></span>
+            <span style="width:2px; background:var(--seed-color-fg-brand); border-radius:1px; height:10px;"></span>
+            <span style="width:2px; background:var(--seed-color-fg-brand); border-radius:1px; height:4px;"></span>
+          </div>
+          <span>카페 백색소음</span>
+        </button>
+
+        <!-- Cart Trigger -->
+        <button class="seed-cart-trigger" onclick="openCart()" aria-label="장바구니 보기">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span id="cartBadge" class="seed-cart-badge" style="display:none;">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 2. Hero Section (당근 SEED 스타일 감성 배너) -->
+  <section class="seed-hero">
+    <div class="container">
+      <div class="hero-box">
+        <div class="hero-content">
+          <span class="seed-tag-chip">🌱 성수동 로스터리 & 스페셜티</span>
+          <h1 class="hero-title">
+            생각이 머무는 곳,<br>
+            한 잔의 깊은 위로 <span class="highlight">heethink</span>
+          </h1>
+          <p class="hero-desc">
+            분주한 일상 속, 나만의 영감과 사유가 깃드는 공간.<br>
+            당일 로스팅한 스페셜티 원두와 정성으로 구워낸 수제 디저트를 만나보세요.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#menu" class="seed-btn seed-btn-lg seed-btn-brand">
+              주문 & 메뉴 보기
+            </a>
+            <a href="#reservation" class="seed-btn seed-btn-lg seed-btn-neutral-weak">
+              자리 예약하기
+            </a>
+          </div>
+
+          <!-- Cafe Manner Temperature -->
+          <div class="manner-temp-card">
+            <div class="temp-left">
+              <span style="font-size: 1.3rem;">☕</span>
+              <div>
+                <div class="temp-label">희띵크 향기 지수</div>
+                <div class="temp-badge-desc">동네 이웃 1,280명이 추천했어요</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div class="temp-meter-bar">
+                <div class="temp-meter-fill"></div>
+              </div>
+              <span class="temp-val">98.5°C</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80" 
+               alt="heethink cafe interior" 
+               class="hero-main-img">
+          <div class="hero-floating-bubble">
+            <span class="bubble-icon">✨</span>
+            <div class="bubble-text">
+              <h5>오늘의 추천 원두</h5>
+              <p>에티오피아 예가체프 G1 첼바</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Interactive Coffee Matcher (취향 맞춤) -->
+  <section id="finder" class="finder-section">
+    <div class="container">
+      <div class="finder-box">
+        <span class="seed-tag-chip" style="margin: 0 auto 12px; display:inline-flex;">🔍 1초 취향 테스트</span>
+        <h2 class="finder-question">지금 어떤 스타일의 커피가 끌리시나요?</h2>
+        
+        <div class="finder-options">
+          <button class="finder-btn" onclick="selectTaste('sweet', this)">
+            🍦 달콤하고 크리미한 맛
+          </button>
+          <button class="finder-btn" onclick="selectTaste('heavy', this)">
+            🍫 묵직하고 고소한 다크
+          </button>
+          <button class="finder-btn" onclick="selectTaste('fruity', this)">
+            🌸 화사하고 산뜻한 꽃과 과일향
+          </button>
+        </div>
+
+        <!-- Result Box -->
+        <div id="finderResult" class="finder-result">
+          <img id="finderResultImg" src="" alt="추천 커피" class="finder-result-img">
+          <div class="finder-result-info">
+            <h4 id="finderResultTitle">메뉴 이름</h4>
+            <p id="finderResultDesc">설명</p>
+            <button id="finderAddBtn" class="seed-btn seed-btn-sm seed-btn-brand">
+              바로 장바구니 담기
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Menu & Filter Section -->
+  <section id="menu" class="menu-section">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">heethink 메뉴</h2>
+        <p class="section-sub">엄선된 재료와 바리스타의 정성이 담긴 음료와 베이커리</p>
+      </div>
+
+      <!-- SEED Filter Chips -->
+      <div class="seed-chip-group">
+        <button class="seed-chip active" data-category="all">전체</button>
+        <button class="seed-chip" data-category="signature">⭐ 시그니처</button>
+        <button class="seed-chip" data-category="coffee">☕ 에스프레소 & 필터</button>
+        <button class="seed-chip" data-category="noncoffee">🍵 논커피 & 티 에이드</button>
+        <button class="seed-chip" data-category="dessert">🥐 수제 베이커리</button>
+      </div>
+
+      <!-- Menu Grid Container -->
+      <div id="menuGrid" class="menu-grid">
+        <!-- Rendered by app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Neighborhood Community Reviews (당근 동네생활 감성) -->
+  <section id="reviews" class="review-section">
+    <div class="container">
+      <div class="section-head">
+        <span class="seed-tag-chip">🧡 이웃들의 솔직한 이야기</span>
+        <h2 class="section-title">성수동 이웃들이 남긴 후기</h2>
+        <p class="section-sub">당근 이웃들이 직접 경험하고 남긴 따뜻한 리뷰를 확인해보세요.</p>
+      </div>
+
+      <div class="review-grid">
+        <div class="review-card">
+          <div class="review-author">
+            <div class="author-avatar">🦊</div>
+            <div class="author-meta">
+              <h5>성수동토박이</h5>
+              <span>성수2가 제1동 ∙ 단골 8개월차</span>
+            </div>
+          </div>
+          <p class="review-text">
+            “주말 아침마다 크림 라떼 마시러 와요. 흑임자 크림이 전혀 느끼하지 않고 정말 고소해요. 조용히 책 읽기 최고의 아지트입니다.”
+          </p>
+          <span class="review-tag">#희띵크크림라떼 #아늑한공간</span>
+        </div>
+
+        <div class="review-card">
+          <div class="review-author">
+            <div class="author-avatar">☕</div>
+            <div class="author-meta">
+              <h5>커피러버민지</h5>
+              <span>송정동 ∙ 단골 1년차</span>
+            </div>
+          </div>
+          <p class="review-text">
+            “핸드드립 예가체프 진심 감동이에요. 사장님이 원두 노트 설명도 친절하게 해주시고 까눌레 겉바속촉 미쳤습니다!”
+          </p>
+          <span class="review-tag">#핸드드립맛집 #프랑스까눌레</span>
+        </div>
+
+        <div class="review-card">
+          <div class="review-author">
+            <div class="author-avatar">🌿</div>
+            <div class="author-meta">
+              <h5>초록식물집사</h5>
+              <span>성수1가 ∙ 단골 5개월차</span>
+            </div>
+          </div>
+          <p class="review-text">
+            “테라스 좌석 햇살이 너무 예뻐요. 반려동물 동반도 가능해서 산책길에 들르기 딱 좋아요. 항상 친절하셔서 기분 좋아지는 곳!”
+          </p>
+          <span class="review-tag">#반려동물환영 #햇살맛집</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Reservation & Store Info Section -->
+  <section id="reservation" class="info-section">
+    <div class="container">
+      <div class="info-layout">
+        
+        <!-- Reservation Form -->
+        <div class="info-panel">
+          <span class="seed-tag-chip" style="margin-bottom:12px;">📅 빠른 예약</span>
+          <h3 class="section-title" style="font-size: 1.35rem; margin-bottom: 8px;">테이블 & 회의실 예약</h3>
+          <p class="section-sub" style="margin-bottom: 24px;">여유로운 사유와 대화를 위해 미리 좌석을 예약하세요.</p>
+
+          <form id="reservationForm">
+            <div class="form-group">
+              <label class="form-label" for="resName">예약자 성함</label>
+              <input type="text" id="resName" class="seed-input" placeholder="예: 홍길동" required>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="resDate">방문 일자</label>
+                <input type="date" id="resDate" class="seed-input" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="resTime">방문 시간</label>
+                <select id="resTime" class="seed-select" required>
+                  <option value="11:00">오전 11:00</option>
+                  <option value="13:00">오후 01:00</option>
+                  <option value="15:00">오후 03:00</option>
+                  <option value="17:00">오후 05:00</option>
+                  <option value="19:00">오후 07:00</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="resParty">방문 인원</label>
+              <select id="resParty" class="seed-select">
+                <option value="1명">1인 (집중 & 독서 좌석)</option>
+                <option value="2명" selected>2인 (테라스 & 윈도우석)</option>
+                <option value="3~4명">3~4인 (소파 라운지석)</option>
+                <option value="5인 이상 단체">5인 이상 (프라이빗 룸)</option>
+              </select>
+            </div>
+
+            <button type="submit" class="seed-btn seed-btn-lg seed-btn-brand" style="width: 100%; margin-top: 8px;">
+              예약 신청하기
+            </button>
+          </form>
+        </div>
+
+        <!-- Store Info -->
+        <div class="info-panel" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <span class="seed-tag-chip" style="margin-bottom:12px;">📍 오시는 길</span>
+            <h3 class="section-title" style="font-size: 1.35rem; margin-bottom: 16px;">heethink cafe 안내</h3>
+            
+            <div style="display:flex; flex-direction:column; gap:16px; font-size:0.92rem;">
+              <div>
+                <strong style="display:block; color:var(--seed-color-fg-neutral); margin-bottom:4px;">주소</strong>
+                <span style="color:var(--seed-color-fg-neutral-subtle);">서울특별시 성동구 성수이로 22길 18 (성수역 3번 출구 도보 5분)</span>
+              </div>
+              <div>
+                <strong style="display:block; color:var(--seed-color-fg-neutral); margin-bottom:4px;">영업 시간</strong>
+                <span style="color:var(--seed-color-fg-neutral-subtle);">월 - 금 : 08:30 ~ 21:00 (라스트오더 20:30)<br>토 - 일 : 10:00 ~ 22:00 (라스트오더 21:30)</span>
+              </div>
+              <div>
+                <strong style="display:block; color:var(--seed-color-fg-neutral); margin-bottom:4px;">편의 시설</strong>
+                <span style="color:var(--seed-color-fg-neutral-subtle);">반려동물 동반 가능 🐶 ∙ 와이파이 & 콘센트 완비 💻 ∙ 주차 1시간 무료 🚗</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:24px; border-radius:var(--seed-radius-lg); overflow:hidden; border:1px solid var(--seed-color-stroke-neutral-weak);">
+            <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=700&q=80" alt="Cafe exterior" style="width:100%; height:160px; object-fit:cover;">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. SEED Bottom Sheet (Cart Drawer) -->
+  <div id="cartDrawerBackdrop" class="sheet-backdrop" onclick="closeCart()"></div>
+  <aside id="cartDrawer" class="seed-bottom-sheet" aria-label="장바구니">
+    <div class="sheet-header">
+      <h3 class="sheet-title">주문 장바구니</h3>
+      <button class="sheet-close-btn" onclick="closeCart()" aria-label="닫기">✕</button>
+    </div>
+    
+    <div id="cartItemsList" class="sheet-body">
+      <!-- Items dynamically injected -->
+    </div>
+
+    <div class="sheet-footer">
+      <div class="total-summary">
+        <span class="label">총 결제 예정 금액</span>
+        <span id="cartTotalAmount" class="amount">0원</span>
+      </div>
+      <button class="seed-btn seed-btn-lg seed-btn-brand" style="width:100%;" onclick="checkoutOrder()">
+        바로 주문하기
+      </button>
+    </div>
+  </aside>
+
+  <!-- 8. Receipt Modal -->
+  <div id="receiptOverlay" class="receipt-overlay">
+    <div class="receipt-box">
+      <div class="receipt-badge">🎉</div>
+      <h3 style="font-size:1.3rem; font-weight:800; margin-bottom:6px;">주문이 완료되었습니다!</h3>
+      <p style="font-size:0.85rem; color:var(--seed-color-fg-neutral-muted); margin-bottom:20px;">
+        바리스타가 맛있는 커피를 정성껏 준비하고 있어요.
+      </p>
+
+      <div style="background:var(--seed-color-bg-neutral-subtle); border-radius:var(--seed-radius-md); padding:16px; margin-bottom:20px; text-align:left; font-size:0.88rem;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+          <span style="color:var(--seed-color-fg-neutral-muted);">주문 번호</span>
+          <strong id="receiptOrderNum" style="color:var(--seed-color-fg-brand);">HT-000000</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+          <span style="color:var(--seed-color-fg-neutral-muted);">주문 내역</span>
+          <span id="receiptItemsSummary">내역</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding-top:8px; border-top:1px dashed var(--seed-color-stroke-neutral-weak); font-weight:800;">
+          <span>결제 금액</span>
+          <span id="receiptTotal" style="color:var(--seed-color-fg-neutral);">0원</span>
+        </div>
+      </div>
+
+      <button class="seed-btn seed-btn-md seed-btn-brand" style="width:100%;" onclick="closeReceipt()">
+        확인
+      </button>
+    </div>
+  </div>
+
+  <!-- 9. SEED Toast Notification -->
+  <div id="seedToast" class="seed-toast"></div>
+
+  <!-- 10. Footer -->
+  <footer class="seed-footer">
+    <div class="container footer-inner">
+      <div>
+        <p style="font-weight:700; color:var(--seed-color-fg-neutral); margin-bottom:4px;">heethink cafe (희띵크 카페)</p>
+        <p>사업자등록번호: 123-45-67890 ∙ 대표: heethink ∙ 고객센터: 02-1234-5678</p>
+        <p style="margin-top:6px;">Design Inspired by Daangn SEED Design System (seed-design.io)</p>
+      </div>
+      <div>
+        <p>© 2026 heethink cafe. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- App Script -->
+  <script src="app.js"></script>
+</body>
+</html>
