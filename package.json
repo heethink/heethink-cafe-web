@@ -1,11 +1,29 @@
 {
-  "name": "kma-weather-web",
+  "name": "heethink-cafe",
   "version": "1.0.0",
-  "description": "기상청 API 연동 실시간 날씨 웹 애플리케이션",
+  "description": "heethink cafe - Specialty Cafe & Roastery powered by Daangn SEED Design System",
   "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
+  "bin": {
+    "heethink-cafe": "./bin/cli.js"
   },
+  "scripts": {
+    "start": "node server.js",
+    "cli": "node ./bin/cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/heethink/heethink-cafe-web.git"
+  },
+  "keywords": [
+    "heethink",
+    "cafe",
+    "seed-design",
+    "daangn",
+    "specialty-coffee",
+    "cli"
+  ],
+  "author": "heethink",
+  "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
